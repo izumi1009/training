@@ -1,0 +1,706 @@
+﻿<!DOCTYPE html>
+<html>
+<head><title>IRR Calculator</title><meta charset="UTF-8" />
+<style>
+    .box01 {
+        position: relative;
+        display: inline-block;
+        width: 810px;
+        height: 110px;
+        margin: 1em;
+        border: solid rgba(0,0,128,.5) 3px;
+        border-radius: 10px;
+     }
+
+    .box01:hover{
+        background: rgba(0,0,128,.1);
+        color: rgba(0,0,0,1);
+
+        transition:border linear .2s,box-shadow linear .2s;
+        -moz-transition:border linear .2s,-moz-box-shadow linear .2s;
+        -webkit-transition:border linear .2s,-webkit-box-shadow linear .2s;
+  
+        outline: rgba(255,255,255,1) solid 3px;
+        //border-color:rgba(255,255,255,.5);
+
+        box-shadow:0 0 8px 8px rgba(50,50,255,.5);
+        -moz-box-shadow:0 0 8px 8px rgba(50,50,255,.5);
+        -webkit-box-shadow:0 0 8px 8px rgba(50,50,255,.5);
+    }
+
+    .box02 {
+        position: relative;
+        display: inline-block;
+        width: 210px;
+        height: 110px;
+        margin: 1em;
+        border: solid rgba(0,0,128,.5) 3px;
+        border-radius: 10px;
+    }
+
+    .box02:hover{
+        background: rgba(0,0,128,.1);
+        color: rgba(0,0,0,1);
+
+        transition:border linear .2s,box-shadow linear .2s;
+        -moz-transition:border linear .2s,-moz-box-shadow linear .2s;
+        -webkit-transition:border linear .2s,-webkit-box-shadow linear .2s;
+  
+        outline:none;
+        border-color:rgba(255,255,255,.5);
+
+        box-shadow:0 0 8px 4px rgba(50,50,255,.5);
+        -moz-box-shadow:0 0 8px 4px rgba(50,50,255,.5);
+        -webkit-box-shadow:0 0 8px 4px rgba(50,50,255,.5);
+    }
+	
+	.box03 {
+        position: relative;
+        display: inline-block;
+        width: 810px;
+        height: 580px;
+        margin: 1em;
+        border: solid rgba(0,0,128,.5) 3px;
+        border-radius: 10px;
+     }
+
+    .box03:hover{
+        background: rgba(0,0,128,.1);
+        color: rgba(0,0,0,1);
+
+        transition:border linear .2s,box-shadow linear .2s;
+        -moz-transition:border linear .2s,-moz-box-shadow linear .2s;
+        -webkit-transition:border linear .2s,-webkit-box-shadow linear .2s;
+  
+        outline: rgba(255,255,255,1) solid 3px;
+        //border-color:rgba(255,255,255,.5);
+
+        box-shadow:0 0 8px 8px rgba(50,50,255,.5);
+        -moz-box-shadow:0 0 8px 8px rgba(50,50,255,.5);
+        -webkit-box-shadow:0 0 8px 8px rgba(50,50,255,.5);
+    }
+
+    .label {
+        top: 0;
+        left: 0;
+        padding: 0 3px 3px 0;
+        background-color: rgba(0,0,128,.8);
+        color: rgba(255,255,255,1);
+    }
+
+    .endlabel {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        padding: 3px 0 0 3px;
+        background-color: rgba(0,0,128,.8);
+        color: rgba(255,255,255,1);
+    }
+
+    input[type=text]{
+        background-color:rgba(255,255,255,1);
+    }
+
+    input[type=text]:focus,input[type=text]:hover{
+        background-color:rgba(200,200,200,.8);
+    }
+	
+    .lightborder{
+        position: absolute;
+        left: 10px;
+        bottom: 0;
+
+        transition:border linear .1s;
+        -moz-transition:border linear .1s;
+        -webkit-transition:border linear .1s;
+        outline:rgba(255,165,0,1) dashed medium;
+    }
+
+    /* Add this attribute to the element that needs a tooltip */
+    [data-tooltip] {
+        position: relative;
+    }
+
+    /* Hide the tooltip content by default */
+    [data-tooltip]:before,[data-tooltip]:after {
+        visibility: hidden;
+    }
+
+    /* Position tooltip above the element */
+    [data-tooltip]:before {
+        position: absolute;
+        bottom: 0%;
+        left: 120%;
+        margin-bottom: 0px;
+        margin-left: 0px;
+        padding: 3px;
+        width: 200px;
+        -webkit-border-radius: 3px;
+        -moz-border-radius: 3px;
+        border-radius: 3px;
+        background-color: rgba(128,0,128,.7);
+        color: rgba(255,255,255,1);
+        content: attr(data-tooltip);
+        text-align: left;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    /* Triangle hack to make tooltip look like a speech bubble */
+    [data-tooltip]:after {
+        position: absolute;
+        bottom: 20%;
+        left: 110%;
+        border-top: 5px solid rgba(0,0,0,0);
+        border-right: 5px solid rgba(128,0,128,.7);
+        border-bottom: 5px solid rgba(0,0,0,0);
+        content: "";
+    }
+
+    /* Show tooltip content on hover */
+    [data-tooltip]:hover:before,[data-tooltip]:hover:after {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    [triangle] {
+        position: relative;
+    }
+
+    [triangle]:hover:after{
+        position: absolute;
+        bottom: -45%;
+        left: 40%;
+        border-left: 8px solid rgba(0,0,0,0);
+        border-right: 8px solid rgba(0,0,0,0);
+        border-bottom: 8px solid rgba(128,0,128,.7);
+        content: "";
+    }
+
+</style>
+
+</head>
+<body>
+
+<script>
+    function func_a(a,period,balance){
+        sum=a;
+
+        for(i=period;i>1;--i){
+            sum=a*(sum+1);
+        }
+
+        return sum-balance;
+    }
+
+    function func_a3(a,period_a,period_b,balance){
+        sum=1;
+
+        for(i=period_a;i>1;--i){
+            sum=a*sum+1;
+        }
+
+        sum*=Math.pow(a,period_b-period_a+1);
+
+        return sum-balance;
+    }
+	
+	function func_a4(a,principleArr){
+		//return principleArr[1]*Math.pow(a,3)+(principleArr[3]-principleArr[2])*Math.pow(a,2)+(principleArr[5]-principleArr[4])*a-(principleArr[0]+principleArr[6]);//-(解約金+最後期回饋金)
+		//return a*(a*(a*principleArr[1]+principleArr[3]-principleArr[2])+principleArr[5]-principleArr[4])-(principleArr[0]+principleArr[6])
+		sum=a*principleArr[1];
+		for(i=2;i<=Math.ceil(period/2);++i){
+			//if(principleArr[i+i-1]>0){
+				sum=a*(sum+principleArr[i+i-1]-principleArr[i+i-2]);
+			//}else{
+			//	sum*=a;
+			//	sumReturnMoney+=principleArr[i+i-2]
+			//}
+		}//console.log("sum: "+sum+" ,a: "+a);
+		return sum-(principleArr[0]+principleArr[period%2?period+1:period]);
+	}
+
+    function func_b(a,period){
+        sum=i;
+
+        for(i=period;i>1;--i){
+			//sum+=i*Math.pow(a,i-1);
+			sum=a*sum+i-1;
+        }
+
+        return sum;
+    }
+
+    function func_b3(a,period_a,period_b){
+        sum=period_b;
+
+        for(i=1;i<period_a;++i){
+            //period_b* a^(period_b-1) + (period_b-1)* a^(period_b-2)
+            //( period_b* a + period_b-1 ) * a^(period_b-period_a)
+            //(( period_b* a + period_b-1 ) * a + periodb-2) * a^(period_b-period_a)
+            //period_b 
+            //period_b * a + period_b-i
+            sum=a*sum+period_b-i;
+        }
+
+        sum*=Math.pow(a,period_b-period_a);
+
+        return sum;
+    }
+	
+	function func_b4(a,principleArr){
+		//return 3*principleArr[0]*Math.pow(a,2)+2*(principleArr[2]-principleArr[1])*a+(principleArr[4]-principleArr[3]);
+		//return a*(a*3*principleArr[0]+2*(principleArr[2]-principleArr[1]))+(principleArr[4]-principleArr[3]);
+		sum = a*Math.ceil(period/2)*principleArr[0];
+		//sum = a*(sum+(Math.ceil(period/2)-1)*(principleArr[2]-principleArr[1]))
+		for(i=3;i<=Math.ceil(period/2);++i){
+			//if(principleArr[i+i-1]>0){
+				sum = a*(sum+(Math.ceil(period/2)-(i-2))*(principleArr[i+i-4]-principleArr[i+i-5]));
+			//}else{
+			//	sum*=a;
+			//}
+		}
+		sum+=(principleArr[i+i-4]-principleArr[i+i-5]);
+		//console.log("sumB: "+sum);
+		return sum;
+	}
+	
+
+    function Total(){
+        txt1 = document.getElementById('textfield').value;
+        txt2 = document.getElementById('textfield2').value;
+        txt3 = document.getElementById('textfield3').value;    
+        txtguess = document.getElementById('textfieldguess').value;
+        txtnewtoncycle = document.getElementById('textfieldnewtoncycle').value;
+
+        (txt1=="")?txt1=0:txt1=parseFloat(txt1);
+        (txt2=="")?txt2=0:txt2=parseInt(txt2,10);
+        (txt3=="")?txt3=0:txt3=parseFloat(txt3);
+        (txtguess=="")?txtguess=0:txtguess=parseFloat(txtguess);
+        (txtnewtoncycle=="")?txtnewtoncycle=0:txtnewtoncycle=parseInt(txtnewtoncycle,10);
+
+        balance=txt3/txt1;
+        if(txt1<0){document.getElementById('span1').innerHTML = "smaller than 0 is not allowed"}
+        else if(txt1==0 || txt1*txt2==txt3){document.getElementById('span1').innerHTML = "IRR(年化報酬率): 0%"}
+        else if(txt1*txt2>txt3){document.getElementById('span1').innerHTML = "IRR(年化報酬率): negative reward"}
+        else if(txt2<=0){document.getElementById('span1').innerHTML = "期數須大於或等於1"}
+        else if(txt2==1){document.getElementById('span1').innerHTML = "IRR(年化報酬率): "+(balance-1)*100+"%"}
+        else if(txt2==2){document.getElementById('span1').innerHTML = "IRR(年化報酬率): "+((Math.sqrt(1+4*balance)-1)/2-1)*100+"%"}
+        else if(txt2>2){
+            for(j=0;j<txtnewtoncycle;++j){
+                txtguess-=func_a(txtguess,txt2,balance)/func_b(txtguess,txt2);
+            }
+        document.getElementById('span1').innerHTML ="IRR(年化報酬率): "+(txtguess-1)*100+"%";
+        }
+        else{
+            document.getElementById('span1').innerHTML ="The other status Total";   
+        }
+        document.getElementById('span1').style.outline='#'+fchgcolor()+' dashed medium';
+    }
+
+    function Total2(){
+        txt4 = document.getElementById('textfield4').value;
+        txt5 = document.getElementById('textfield5').value;
+        txt6 = document.getElementById('textfield6').value;    
+
+        (txt4!="")?txt4=parseFloat(txt4):txt4=0;
+        (txt5!="")?txt5=parseInt(txt5,10):txt5=0;
+        (txt6!="")?txt6=parseFloat(txt6):txt6=0;
+
+        balance=txt6/txt4;
+        if(txt4<0){document.getElementById('span2').innerHTML = "smaller than 0 is not allowed"}
+        else if(txt4==0 || txt4==txt6){document.getElementById('span2').innerHTML = "IRR(年化報酬率): 0%"}
+        else if(txt4>txt6){document.getElementById('span2').innerHTML = "IRR(年化報酬率): negative reward"}
+        else if(txt5<=0){document.getElementById('span2').innerHTML = "期數須大於或等於1"}
+        else if(txt5==1){document.getElementById('span2').innerHTML = "IRR(年化報酬率): "+(balance-1)*100+"%"}
+        else if(txt5>=2){document.getElementById('span2').innerHTML = "IRR(年化報酬率): "+(Math.pow(balance,1/txt5)-1)*100+"%"}
+        else{
+            document.getElementById('span2').innerHTML ="The other status Total2";
+        }
+        document.getElementById('span2').style.outline='#'+fchgcolor()+' dashed medium';
+    }
+
+    function Total3(){
+        txt7 = document.getElementById('textfield7').value;
+        txt8 = document.getElementById('textfield8').value;
+        txt9 = document.getElementById('textfield9').value;    
+        txt10 = document.getElementById('textfield10').value;  
+        txtguess = document.getElementById('textfieldguess').value;
+        txtnewtoncycle = document.getElementById('textfieldnewtoncycle').value;
+
+        (txt7=="")?txt7=0:txt7=parseFloat(txt7);
+        (txt8=="")?txt8=0:txt8=parseInt(txt8,10);
+        (txt9=="")?txt9=0:txt9=parseInt(txt9,10);
+        (txt10=="")?txt10=0:txt10=parseFloat(txt10);
+        (txtguess=="")?txtguess=0:txtguess=parseFloat(txtguess);
+        (txtnewtoncycle=="")?txtnewtoncycle=0:txtnewtoncycle=parseInt(txtnewtoncycle,10);
+
+        balance=txt10/txt7;
+        if(txt7<0){document.getElementById('span3').innerHTML = "smaller than 0 is not allowed"}
+        else if(txt7==0 || txt7*txt8==txt10){document.getElementById('span3').innerHTML = "IRR(年化報酬率): 0%"}
+        else if(txt7*txt8>txt10){document.getElementById('span3').innerHTML = "IRR(年化報酬率): negative reward"}
+        else if(txt8>txt9){document.getElementById('span3').innerHTML = "領回期數須大於或等於繳費期數"}
+        else if(txt8<=0 || txt9<=0){document.getElementById('span3').innerHTML = "期數須大於或等於1"}
+        else if(txt8==1 && txt9==1){document.getElementById('span3').innerHTML = "IRR(年化報酬率): "+(balance-1)*100+"%"}
+        else if(txt8==1 && txt9>=2){document.getElementById('span3').innerHTML = "IRR(年化報酬率): "+(Math.pow(balance,1/txt9)-1)*100+"%"}
+        else if(txt8==2 && txt9==2){document.getElementById('span3').innerHTML = "IRR(年化報酬率): "+((Math.sqrt(1+4*balance)-1)/2-1)*100+"%"}
+        else if(txt8>=2 && txt9>=3){
+            for(j=0;j<txtnewtoncycle;++j){
+                txtguess-=func_a3(txtguess,txt8,txt9,balance)/func_b3(txtguess,txt8,txt9);
+            }
+            document.getElementById('span3').innerHTML ="IRR(年化報酬率): "+(txtguess-1)*100+"%";
+        }
+        else{
+            document.getElementById('span3').innerHTML ="The other status total3";
+        }
+        document.getElementById('span3').style.outline='#'+fchgcolor()+' dashed medium';
+    }
+
+	function Total4(){
+	    txt101 = document.getElementById('textfield101').value;
+        txt102 = document.getElementById('textfield102').value;
+        txt103 = document.getElementById('textfield103').value;
+        txt104 = document.getElementById('textfield104').value;
+		txt105 = document.getElementById('textfield105').value;
+        txt106 = document.getElementById('textfield106').value;
+        txt107 = document.getElementById('textfield107').value;
+        txt108 = document.getElementById('textfield108').value;
+		txt109 = document.getElementById('textfield109').value;
+        txt110 = document.getElementById('textfield110').value;
+        txt111 = document.getElementById('textfield111').value;
+        txt112 = document.getElementById('textfield112').value;
+		txt113 = document.getElementById('textfield113').value;
+        txt114 = document.getElementById('textfield114').value;
+        txt115 = document.getElementById('textfield115').value;
+        txt116 = document.getElementById('textfield116').value;
+		txt117 = document.getElementById('textfield117').value;
+        txt118 = document.getElementById('textfield118').value;
+        txt119 = document.getElementById('textfield119').value;
+        txt120 = document.getElementById('textfield120').value;
+		txt121 = document.getElementById('textfield121').value;
+        txt122 = document.getElementById('textfield122').value;
+        txt123 = document.getElementById('textfield123').value;
+        txt124 = document.getElementById('textfield124').value;
+		txt125 = document.getElementById('textfield125').value;
+        txt126 = document.getElementById('textfield126').value;
+        txt127 = document.getElementById('textfield127').value;
+        txt128 = document.getElementById('textfield128').value;
+		txt129 = document.getElementById('textfield129').value;
+        txt130 = document.getElementById('textfield130').value;
+        txt131 = document.getElementById('textfield131').value;
+        txt132 = document.getElementById('textfield132').value;
+		txt133 = document.getElementById('textfield133').value;
+        txt134 = document.getElementById('textfield134').value;
+        txt135 = document.getElementById('textfield135').value;
+        txt136 = document.getElementById('textfield136').value;
+		txt137 = document.getElementById('textfield137').value;
+        txt138 = document.getElementById('textfield138').value;
+        txt139 = document.getElementById('textfield139').value;
+        txt140 = document.getElementById('textfield140').value;
+		
+		txt201 = document.getElementById('textfield201').value;
+        txtguess = document.getElementById('textfieldguess').value;
+        txtnewtoncycle = document.getElementById('textfieldnewtoncycle').value;
+
+		(txt101=="")?txt101=0:txt101=parseFloat(txt101);
+        (txt102=="")?txt102=0:txt102=parseFloat(txt102);
+        (txt103=="")?txt103=0:txt103=parseFloat(txt103);
+        (txt104=="")?txt104=0:txt104=parseFloat(txt104);
+		(txt105=="")?txt105=0:txt105=parseFloat(txt105);
+        (txt106=="")?txt106=0:txt106=parseFloat(txt106);
+        (txt107=="")?txt107=0:txt107=parseFloat(txt107);
+        (txt108=="")?txt108=0:txt108=parseFloat(txt108);
+		(txt109=="")?txt109=0:txt109=parseFloat(txt109);
+        (txt110=="")?txt110=0:txt110=parseFloat(txt110);
+        (txt111=="")?txt111=0:txt111=parseFloat(txt111);
+        (txt112=="")?txt112=0:txt112=parseFloat(txt112);
+		(txt113=="")?txt113=0:txt113=parseFloat(txt113);
+        (txt114=="")?txt114=0:txt114=parseFloat(txt114);
+        (txt115=="")?txt115=0:txt115=parseFloat(txt115);
+        (txt116=="")?txt116=0:txt116=parseFloat(txt116);
+		(txt117=="")?txt117=0:txt117=parseFloat(txt117);
+        (txt118=="")?txt118=0:txt118=parseFloat(txt118);
+        (txt119=="")?txt119=0:txt119=parseFloat(txt119);
+        (txt120=="")?txt120=0:txt120=parseFloat(txt120);
+		(txt121=="")?txt121=0:txt121=parseFloat(txt121);
+        (txt122=="")?txt122=0:txt122=parseFloat(txt122);
+        (txt123=="")?txt123=0:txt123=parseFloat(txt123);
+        (txt124=="")?txt124=0:txt124=parseFloat(txt124);
+		(txt125=="")?txt125=0:txt125=parseFloat(txt125);
+        (txt126=="")?txt126=0:txt126=parseFloat(txt126);
+        (txt127=="")?txt127=0:txt127=parseFloat(txt127);
+        (txt128=="")?txt128=0:txt128=parseFloat(txt128);
+		(txt129=="")?txt129=0:txt129=parseFloat(txt129);
+        (txt130=="")?txt130=0:txt130=parseFloat(txt130);
+        (txt131=="")?txt131=0:txt131=parseFloat(txt131);
+        (txt132=="")?txt132=0:txt132=parseFloat(txt132);
+		(txt133=="")?txt133=0:txt133=parseFloat(txt133);
+        (txt134=="")?txt134=0:txt134=parseFloat(txt134);
+        (txt135=="")?txt135=0:txt135=parseFloat(txt135);
+        (txt136=="")?txt136=0:txt136=parseFloat(txt136);
+		(txt137=="")?txt137=0:txt137=parseFloat(txt137);
+        (txt138=="")?txt138=0:txt138=parseFloat(txt138);
+        (txt139=="")?txt139=0:txt139=parseFloat(txt139);
+        (txt140=="")?txt140=0:txt140=parseFloat(txt140);
+		
+		(txt201=="")?txt201=0:txt201=parseFloat(txt201);
+        (txtguess=="")?txtguess=0:txtguess=parseFloat(txtguess);
+        (txtnewtoncycle=="")?txtnewtoncycle=0:txtnewtoncycle=parseInt(txtnewtoncycle,10);
+		
+		if(                           txt103==0 && txt104==0 && txt105==0 && txt106==0 && txt107==0 && txt108==0 && txt109==0 && txt110==0 &&
+		    txt111==0 && txt112==0 && txt113==0 && txt114==0 && txt115==0 && txt116==0 && txt117==0 && txt118==0 && txt119==0 && txt120==0 &&
+			txt121==0 && txt122==0 && txt123==0 && txt124==0 && txt125==0 && txt126==0 && txt127==0 && txt128==0 && txt129==0 && txt130==0 &&
+		    txt131==0 && txt132==0 && txt133==0 && txt134==0 && txt135==0 && txt136==0 && txt137==0 && txt138==0 && txt139==0 && txt140==0 ){
+			
+			if(txt101<0 || txt102<0 || txt201<0){document.getElementById('span4').innerHTML = "smaller than 0 is not allowed"}
+			else if(txt101==0 && txt102==0 && txt201==0){document.getElementById('span4').innerHTML = "IRR(年化報酬率): 0%"}
+			else if(txt101==0 && txt102==0 && txt201>0){document.getElementById('span4').innerHTML = "IRR(年化報酬率): unlimit"}
+			else if(txt101==0 && txt102>0){document.getElementById('span4').innerHTML = "IRR(年化報酬率): unlimit"}
+			else if(txt101>0){
+				if(txt102==0 && (txt201<=0 || txt201<txt101) ){document.getElementById('span4').innerHTML = "IRR(年化報酬率): negative reward"}
+				else if(txt102==0 && txt201==txt101){document.getElementById('span4').innerHTML = "IRR(年化報酬率): 0%"}
+				else if(txt102==0){document.getElementById('span4').innerHTML = "IRR(年化報酬率): "+(txt201-txt101)/txt101*100+"%"}//&& txt201>txt101
+				else if(txt102>0){document.getElementById('span4').innerHTML = "IRR(年化報酬率): "+(txt201+txt102-txt101)/txt101*100+"%"}
+				else{document.getElementById('span4').innerHTML = "The other status txt101>0"}
+			}
+			else{
+				document.getElementById('span4').innerHTML ="The other status total4";
+			}
+		}
+		
+		else if(                                                txt105==0 && txt106==0 && txt107==0 && txt108==0 && txt109==0 && txt110==0 &&
+		    txt111==0 && txt112==0 && txt113==0 && txt114==0 && txt115==0 && txt116==0 && txt117==0 && txt118==0 && txt119==0 && txt120==0 &&
+			txt121==0 && txt122==0 && txt123==0 && txt124==0 && txt125==0 && txt126==0 && txt127==0 && txt128==0 && txt129==0 && txt130==0 &&
+		    txt131==0 && txt132==0 && txt133==0 && txt134==0 && txt135==0 && txt136==0 && txt137==0 && txt138==0 && txt139==0 && txt140==0 ){
+		
+			if(txt101<0 || txt102<0 || txt201<0 || txt103<0 || txt104<0){document.getElementById('span4').innerHTML = "smaller than 0 is not allowed"}
+			//else if(txt103==0 && txt104==0){document.getElementById('span4').innerHTML = "IRR(年化報酬率): 0%"}
+			else if(txt101==0 && txt103==0 && (txt102>0 || txt104>0 || txt201>0)){document.getElementById('span4').innerHTML = "IRR(年化報酬率): unlimit"}
+			else if(txt103==0 && txt104>0 && txt101>0){
+				if(txt101==(txt102+txt104+txt201)){document.getElementById('span4').innerHTML = "IRR(年化報酬率): 0%"}
+				else if(txt101>(txt102+txt104+txt201)){document.getElementById('span4').innerHTML = "IRR(年化報酬率): negative reward"}
+				else if(txt101<(txt102+txt104+txt201)){document.getElementById('span4').innerHTML = "IRR(年化報酬率): "+  (Math.sqrt( (txt102+txt104+txt201)/txt101 ) - 1)*100 +"%"}
+				else document.getElementById('span4').innerHTML = "The other status 1elseif - 2elseif - else"
+			}
+			else if(txt103>0){
+				if((txt101+txt103)>(txt102+txt104+txt201)) {document.getElementById('span4').innerHTML = "IRR(年化報酬率): negative reward"}
+				else if((txt101+txt103)==(txt102+txt104+txt201)){document.getElementById('span4').innerHTML = "IRR(年化報酬率): 0%"}
+				else if((txt101+txt103)<(txt102+txt104+txt201)){document.getElementById('span4').innerHTML = "IRR(年化報酬率): "+( ( Math.sqrt( Math.pow(txt103-txt102,2) + 4*txt101*(txt201+txt104) ) + txt102 - txt103 ) / (2*txt101) - 1 ) * 100+"%"}
+				/*sqrt((第二期-第一期回饋金)^2+4*第一期*(解約金+最後期回饋金))+第一期回饋金-第二期
+			      -------------------------------------------------------------------------------- = result
+                     2*第一期
+                 (result-1)100=irr */				
+				else{document.getElementById('span4').innerHTML = "The other status txt103>0"}
+			}
+			else{
+				document.getElementById('span4').innerHTML ="The other status total4 else if 2";
+			}
+		
+		}
+
+		else{
+			if(txt101<0 || txt102<0 || txt201<0 || txt103<0 || txt104<0 || txt105<0 || txt106<0){document.getElementById('span4').innerHTML = "smaller than 0 is not allowed"}
+			else if(txt101==0 && txt103==0 && txt105==0 && (txt102>0 || txt104>0 || txt106>0 || txt201>0) ){document.getElementById('span4').innerHTML = "IRR(年化報酬率): unlimit"}
+			/*else if(txt105>=0){//牛頓逼近法在多次方方程式有機率碰上「2個斜率相同造成的無窮迴圈內」，與其解決這個狀況，不如使用十分逼近法
+				var principleArr01 = [txt201,txt101,txt102,txt103,txt104,txt105,txt106,txt107,txt108,txt109,txt110,txt111,txt112,txt113,txt114,txt115,txt116,txt117,txt118,txt119,txt120,txt121,txt122,txt123,txt124,txt125,txt126,txt127,txt128,txt129,txt130,txt131,txt132,txt133,txt134,txt135,txt136,txt137,txt138,txt139,txt140];
+				principleArr01.some(function (value, index, array) {
+					value > 0 ? period=index :{};
+				});
+
+				principleArr01SumOdd=0;
+				principleArr01SumEven=0;
+				for(i=1;i<=40;i+=2){
+					principleArr01SumOdd += principleArr01[i];
+					principleArr01SumEven += principleArr01[i+1];
+				}
+
+				if(principleArr01[0]+principleArr01SumEven<principleArr01SumOdd){document.getElementById('span4').innerHTML ="IRR(年化報酬率): negative reward";}
+				else if(principleArr01[0]+principleArr01SumEven==principleArr01SumOdd){document.getElementById('span4').innerHTML ="IRR(年化報酬率): 0";}
+				else{
+				    for(j=0;j<txtnewtoncycle;++j){
+					    txtguess-=func_a4(txtguess,principleArr01)/func_b4(txtguess,principleArr01);
+				    }
+				    //避免落入斜率相同造成的無窮迴圈內
+				    var txtguessM0=txtguess;
+				    var txtguess0;
+				    var i=0;
+                    while( Math.abs(func_a4(txtguess,principleArr01)/func_b4(txtguess,principleArr01)) > 0.00001 ){
+                        txtguess0=txtguess;
+                        txtguess-=func_a4(txtguess,principleArr01)/func_b4(txtguess,principleArr01);
+                        txtguess0=(txtguess0+txtguess)/2;
+                        if(i<5000){
+                            for(j=0;j<2;++j){
+                                if(txtguess>txtguess0){txtguess=txtguess0;}//二分法，找左邊區間
+					            txtguess-=func_a4(txtguess,principleArr01)/func_b4(txtguess,principleArr01);
+				            }
+                        }else if(i==5000){//左邊區間有可能沒根，改找右邊區間，將txtguess還原
+                            txtguess=txtguessM0;
+                        }else{
+                            for(j=0;j<2;++j){
+                                txtguess-=func_a4(txtguess,principleArr01)/func_b4(txtguess,principleArr01);
+                            }
+                        }
+
+				        if(i++>10000)break;
+                    }console.log(i);
+
+				    document.getElementById('span4').innerHTML ="IRR(年化報酬率): "+(txtguess-1)*100+"%";
+				}
+			
+			}*/
+			else if(txt105>=0){//十分逼近法
+				var principleArr01 = [txt201,txt101,txt102,txt103,txt104,txt105,txt106,txt107,txt108,txt109,txt110,txt111,txt112,txt113,txt114,txt115,txt116,txt117,txt118,txt119,txt120,txt121,txt122,txt123,txt124,txt125,txt126,txt127,txt128,txt129,txt130,txt131,txt132,txt133,txt134,txt135,txt136,txt137,txt138,txt139,txt140];
+				principleArr01.some(function (value, index, array) {
+					value > 0 ? period=index :{};
+				});
+				
+				principleArr01SumOdd=0;
+				principleArr01SumEven=0;
+				for(i=1;i<=40;i+=2){
+					principleArr01SumOdd += principleArr01[i];
+					principleArr01SumEven += principleArr01[i+1];
+				}
+			
+				if(principleArr01[0]+principleArr01SumEven<=principleArr01SumOdd){document.getElementById('span4').innerHTML ="IRR(年化報酬率): negative reward";}
+				else{
+					j=0.001;
+					count=0;
+					do{
+						//sum=0;k=1;
+						k=1;
+						sum=principleArr01[k]*(1+j);
+						for(i=Math.ceil(period/2);i>0;--i,k+=2){
+							//if(k==1){sum+=principleArr01[k]*Math.pow( 1+j ,i);}
+							//else{sum+=(principleArr01[k]-principleArr01[k-1])*Math.pow( 1+j ,i);}
+							if(k==1){}
+							else{sum=(1+j)*(sum+principleArr01[k]-principleArr01[k-1]);}
+						}					
+						j+=0.000001;count++;
+					}while(principleArr01[0]+principleArr01[k-1]-sum>0.0000001 || sum-principleArr01[0]-principleArr01[k-1]<0.0000001
+					&& count<9999999 && principleArr01[0]!=0);
+
+					document.getElementById('span4').innerHTML ="IRR(年化報酬率): "+j*100+"%";
+				}
+			}
+			else{
+				document.getElementById('span4').innerHTML ="The other status total4 else if 3";
+			}
+				
+		}
+		//else{document.getElementById('span4').innerHTML ="The other status 最外層else";}
+		
+	
+	}
+	
+    function OnlyNumeric(evt) { 
+        var code = evt.which ? evt.which : event.keyCode;
+        // 37 = left arrow, 39 = right arrow, 8 = backspace, 46 = delete.
+        if( (code>=48 && code<=57) || (code>=96 && code<=105) || code == 37 || code == 39 || code == 8 || code == 46 ){}
+        else {evt.value=evt.value.replace(/[\D]/g,'');}
+    }
+
+    function OnlyNumericAllowDot(evt) { 
+        var code = evt.which ? evt.which : event.keyCode;
+        // 37 = left arrow, 39 = right arrow, 8 = backspace, 46 = delete, 190 = period,110 = num_period.
+        if( (code>=48 && code<=57) || (code>=96 && code<=105) || code == 37 || code == 39 || code == 8 || code == 46 || code == 190 || code == 110){}
+        else {evt.value=evt.value.replace(/[^0-9\.]/g,'');}
+    }
+
+    function fchgcolor(){
+        randomArr=['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'];
+        var changecolor="";
+        for(i=0;i<6;++i){  
+            changecolor+=randomArr[Math.ceil(Math.random()*15)];  
+        }
+        return changecolor;
+    }
+</script>
+
+<div class=box01>
+    <span class=label>期繳儲蓄險</span><br>
+    每期繳<span triangle><input type="text" id="textfield" onkeypress="Total()" onkeyup="Total();OnlyNumericAllowDot(this);" onmouseup="Total();OnlyNumericAllowDot(this);"/></span>元，
+    共繳<span triangle><input type="text" id="textfield2" onkeypress="Total()" onkeyup="Total();OnlyNumeric(this);" onmouseup="Total();OnlyNumeric(this);"/></span>期，
+    期滿領回<span triangle><input type="text" id="textfield3" onkeypress="Total()" onkeyup="Total();OnlyNumericAllowDot(this);" onmouseup="Total();OnlyNumericAllowDot(this);"/></span>元
+    <br>
+    <span id="span1" class=lightborder></span><!--<span class=endlabel>[/期繳儲蓄險]</span>--><br><br>
+</div>
+
+<div class=box02>
+    <span class=label>Adv Options</span><br>
+    <span data-tooltip="與irr愈近愈好，單位是%">猜測值</span><br><span triangle><input type="text" id="textfieldguess" onkeypress="" onkeyup="OnlyNumericAllowDot(this);"/></span><br>
+    <span data-tooltip="循環次數愈多，irr就愈準；但愈耗時(採牛頓逼近法)">循環次數</span><br><span triangle><input type="text" id="textfieldnewtoncycle" onkeypress="" onkeyup="OnlyNumeric(this);"/></span><!--<span class=endlabel>[/Adv Options]</span>-->
+</div>
+
+<script>
+    document.getElementById('textfieldguess').value=0.05;
+    document.getElementById('textfieldnewtoncycle').value=600;
+</script>
+
+
+<div class=box01>
+    <span class=label>躉繳儲蓄險</span><br>
+    躉繳(一次繳清)<span triangle><input type="text" id="textfield4" onkeypress="Total2()" onkeyup="Total2();OnlyNumericAllowDot(this);" onmouseup="Total2();OnlyNumericAllowDot(this);"/></span>元，
+    合約<span triangle><input type="text" id="textfield5" onkeypress="Total2()" onkeyup="Total2();OnlyNumeric(this);" onmouseup="Total2();OnlyNumeric(this);"/></span>期，
+    期滿領回<span triangle><input type="text" id="textfield6" onkeypress="Total2()" onkeyup="Total2();OnlyNumericAllowDot(this);" onmouseup="Total2();OnlyNumericAllowDot(this);"/></span>元
+    <br>
+    <span id="span2" class=lightborder></span><!--<span class=endlabel>[/躉繳儲蓄險]</span>--><br>
+</div>
+
+<div class=box01>
+    <span class=label><span data-tooltip="繳費期滿後，非立即領回，而是等第N期後再領回">期繳儲蓄險(進階選項)</span></span><br>
+    每期繳<span triangle><input type="text" id="textfield7" onkeypress="Total3()" onkeyup="Total3();OnlyNumericAllowDot(this);" onmouseup="Total3();OnlyNumericAllowDot(this);"/></span>元，
+    共繳<span triangle><input type="text" id="textfield8" onkeypress="Total3()" onkeyup="Total3();OnlyNumeric(this);" onmouseup="Total3();OnlyNumeric(this);"/></span>期，
+    繳費期滿後，第<span triangle><input type="text" id="textfield9" onkeypress="Total3()" onkeyup="Total3();OnlyNumeric(this);" onmouseup="Total3();OnlyNumeric(this);"/></span>期領回，
+    領回<span triangle><input type="text" id="textfield10" onkeypress="Total3()" onkeyup="Total3();OnlyNumericAllowDot(this);" onmouseup="Total3();OnlyNumericAllowDot(this);"/></span>元
+    <br>
+    <span id="span3" class=lightborder></span><!--<span class=endlabel>[/期繳儲蓄險(進階選項)]</span>--><br><br>
+</div>
+
+<div class=box03>
+    <span class=label><span data-tooltip="回饋/生存金(十分逼近法)">期繳儲蓄險(回饋/生存金)</span></span><br>
+    第01期繳<span triangle><input type="text" id="textfield101"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield102"/></span>元<br>
+    第02期繳<span triangle><input type="text" id="textfield103"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield104"/></span>元<br>
+	第03期繳<span triangle><input type="text" id="textfield105"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield106"/></span>元<br>
+    第04期繳<span triangle><input type="text" id="textfield107"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield108"/></span>元<br>
+	第05期繳<span triangle><input type="text" id="textfield109"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield110"/></span>元<br>
+    第06期繳<span triangle><input type="text" id="textfield111"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield112"/></span>元<br>
+	第07期繳<span triangle><input type="text" id="textfield113"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield114"/></span>元<br>
+    第08期繳<span triangle><input type="text" id="textfield115"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield116"/></span>元<br>
+	第09期繳<span triangle><input type="text" id="textfield117"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield118"/></span>元<br>
+    第10期繳<span triangle><input type="text" id="textfield119"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield120"/></span>元<br>
+	第11期繳<span triangle><input type="text" id="textfield121"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield122"/></span>元<br>
+    第12期繳<span triangle><input type="text" id="textfield123"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield124"/></span>元<br>
+	第13期繳<span triangle><input type="text" id="textfield125"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield126"/></span>元<br>
+    第14期繳<span triangle><input type="text" id="textfield127"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield128"/></span>元<br>
+	第15期繳<span triangle><input type="text" id="textfield129"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield130"/></span>元<br>
+    第16期繳<span triangle><input type="text" id="textfield131"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield132"/></span>元<br>
+	第17期繳<span triangle><input type="text" id="textfield133"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield134"/></span>元<br>
+    第18期繳<span triangle><input type="text" id="textfield135"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield136"/></span>元<br>
+    第19期繳<span triangle><input type="text" id="textfield137"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield138"/></span>元<br>
+    第20期繳<span triangle><input type="text" id="textfield139"/></span>元，
+    回饋/生存金<span triangle><input type="text" id="textfield140"/></span>元<br>
+	解約/滿期金<span triangle><input type="text" id="textfield201" onkeypress="Total4()" onkeyup="Total4();OnlyNumericAllowDot(this);" onmouseup="Total4();OnlyNumericAllowDot(this);"/></span>元⬅點左邊空格開始計算
+    <br>
+	<span id="span4" class=lightborder></span><!--<span class=endlabel>[/期繳儲蓄險(回饋/生存金)]</span>--><br><br>
+</div>
+</body>
+</html>
